@@ -165,9 +165,11 @@ class DoorController extends Controller
         if ($request->get('secret') != env('rasberry_secret')) {
             throw new Exception('not authorizd');
         }
-        $user = JWTAuth::setToken($request->get('token'))->toUser();
-        if (!$user) {
+        try {
+            $user = JWTAuth::setToken($request->get('token'))->toUser();
+        }catch (Exception){
             $user = User::query()->orderBy('updated_at', 'desc')->first();
+
         }
         /** @var Door $door */
         $door = Door::query()->where('rasberry_pi_code', $request->get('rasberry_pi_code'))->first();

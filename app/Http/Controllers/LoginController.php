@@ -40,8 +40,10 @@ class LoginController extends Controller
         }
 
         $user = Auth::user();
-        $user->updated_at = Carbon::now();
-        $user->save();
+        if(!$user->is_admin){
+            $user->updated_at = Carbon::now();
+            $user->save();
+        }
 
         return response()->json([
             'entity' => $user,

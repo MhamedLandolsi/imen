@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AccessDoor;
 use App\Models\Door;
+use App\Models\Message;
 use App\Models\User;
 use App\Models\UserRequest;
 use Exception;
@@ -99,6 +100,7 @@ class LoginController extends Controller
         $user->is_admin = $request->get('is_admin');
         $user->save();
         AccessDoor::query()->where('user_id', $user->id)->delete();
+        Message::query()->where('target', $user->id)->orWhere('source', $user->id)->delete();
         $doors = $request->get('doors');
 
         if ($doors) {

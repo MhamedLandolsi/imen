@@ -100,7 +100,6 @@ class LoginController extends Controller
         $user->is_admin = $request->get('is_admin');
         $user->save();
         AccessDoor::query()->where('user_id', $user->id)->delete();
-        Message::query()->where('target', $user->id)->orWhere('source', $user->id)->delete();
         $doors = $request->get('doors');
 
         if ($doors) {
@@ -151,6 +150,8 @@ class LoginController extends Controller
         UserRequest::query()
             ->where('user_id', $user->id)
             ->delete();
+        Message::query()->where('target', $user->id)->orWhere('source', $user->id)->delete();
+
 
         $user::query()
             ->where('id', $user->id)->delete();
